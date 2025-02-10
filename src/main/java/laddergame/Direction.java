@@ -3,5 +3,9 @@ package laddergame;
 public enum Direction {
     LEFT,
     RIGHT,
-    DOWN
+    NONE;
+
+    public boolean isBridge() {
+        return !Direction.NONE.equals(this);
+    }
 }
