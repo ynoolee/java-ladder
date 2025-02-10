@@ -46,8 +46,8 @@ public final class Row {
     }
 
     private static void createBridgeAt(int index, Direction... points) {
-        points[index] = Direction.LEFT;
-        points[index + 1] = Direction.RIGHT;
+        points[index] = Direction.RIGHT;
+        points[index + 1] = Direction.LEFT;
     }
 
     public Direction nextMoveDirection(final int lineNumber) {

@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class 자바지기_LadderGameTest {
+public class LadderGameTest {
 
     @Nested
     class 사람_n명_선이_없는_사다리게임 {
@@ -18,7 +18,7 @@ public class 자바지기_LadderGameTest {
 
         @Test
         public void 라인_1_도착지점은_1이다() {
-            final OneHeightLadderGame game = new OneHeightLadderGame(ladder);
+            final LadderGame game = new LadderGame(3,1, () -> false);
 
             final var line = 0;
             final int result = game.run(line);
@@ -41,7 +41,7 @@ public class 자바지기_LadderGameTest {
 
         @Test
         public void 라인_1과_2의_도착지점_결과가_뒤바뀐다() {
-            final OneHeightLadderGame game = new OneHeightLadderGame(matrix);
+            final LadderGame game = new LadderGame(3,1, () -> true);
 
             final var lineOne = 0;
             final var lineTwo = 1;

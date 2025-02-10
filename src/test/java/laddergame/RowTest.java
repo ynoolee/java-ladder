@@ -11,14 +11,14 @@ public class RowTest {
 
 
     @Nested
-    class LEFT_RIGHT_NONE_으로_구성된_ROW {
+    class RIGHT_LEFT_NONE_으로_구성된_ROW {
         private final Row threeLinesOfRow = Row.create(3, () -> Boolean.TRUE);
 
         @Test
         void row_의_n_번_지점의_방향을_알려준다() {
             Direction nextDirection = threeLinesOfRow.nextMoveDirection(0);
 
-            Assertions.assertThat(nextDirection).isEqualTo(Direction.LEFT);
+            Assertions.assertThat(nextDirection).isEqualTo(Direction.RIGHT);
         }
 
         @Test
