@@ -1,4 +1,4 @@
-package laddergame;
+package laddergame.ladder;
 
 import lombok.AccessLevel;
 import lombok.Builder;

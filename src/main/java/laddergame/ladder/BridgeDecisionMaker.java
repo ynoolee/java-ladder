@@ -1,4 +1,4 @@
-package laddergame;
+package laddergame.ladder;
 
 public interface BridgeDecisionMaker {
 

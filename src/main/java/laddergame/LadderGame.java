@@ -1,5 +1,8 @@
 package laddergame;
 
+import laddergame.ladder.BridgeDecisionMaker;
+import laddergame.ladder.Ladder;
+
 public class LadderGame {
 
     private final Ladder ladder;

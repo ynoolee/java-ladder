@@ -1,5 +1,6 @@
-package laddergame;
+package laddergame.ladder;
 
+import laddergame.ladder.Direction;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

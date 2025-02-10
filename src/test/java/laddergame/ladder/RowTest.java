@@ -1,4 +1,4 @@
-package laddergame;
+package laddergame.ladder;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
