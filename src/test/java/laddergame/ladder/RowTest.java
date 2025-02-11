@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class RowTest {
@@ -26,6 +28,13 @@ public class RowTest {
             Assertions.assertThatThrownBy(
                     () -> threeLinesOfRow.nextMoveDirection(4))
                 .hasMessage("존재하지 않는 라인입니다");
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {1,2})
+        void row_의_n_번_지점이_브릿지의_시작인지_여부를_알려준다(int numberOfLine) {
+            Assertions.assertThat(threeLinesOfRow.isStartOfBridge(numberOfLine))
+                .isFalse();
         }
     }
 }

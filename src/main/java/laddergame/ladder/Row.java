@@ -9,9 +9,8 @@ public final class Row {
 
     private final List<Direction> points;
 
-    // todo : directions 라는 네이밍이 잘못됐음
-    Row(List<Direction> directions) {
-        this.points = directions;
+    Row(List<Direction> points) {
+        this.points = points;
     }
 
     public static Row create(int numberOfLines, BridgeDecisionMaker decisionMaker) {
@@ -55,5 +54,13 @@ public final class Row {
             throw new IllegalArgumentException("존재하지 않는 라인입니다");
         }
         return points.get(lineNumber);
+    }
+
+    public boolean isStartOfBridge(final int lineNumber) {
+        if (points.isEmpty() || points.size() <= lineNumber) {
+            throw new IllegalArgumentException("존재하지 않는 라인입니다");
+        }
+
+        return Direction.RIGHT.equals(points.get(lineNumber));
     }
 }
