@@ -63,4 +63,8 @@ public final class Row {
 
         return Direction.RIGHT.equals(points.get(lineNumber));
     }
+
+    public int numberOfLines() {
+        return this.points.size();
+    }
 }

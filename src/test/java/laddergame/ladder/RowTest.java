@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class RowTest {
 
-
     @Nested
     class RIGHT_LEFT_NONE_으로_구성된_ROW {
         private final Row threeLinesOfRow = Row.create(3, () -> Boolean.TRUE);
@@ -31,10 +30,17 @@ public class RowTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = {1,2})
+        @ValueSource(ints = {1, 2})
         void row_의_n_번_지점이_브릿지의_시작인지_여부를_알려준다(int numberOfLine) {
             Assertions.assertThat(threeLinesOfRow.isStartOfBridge(numberOfLine))
                 .isFalse();
+        }
+
+        @Test
+        void row_의_라인수를_알려준다() {
+            final int numberOfLines = threeLinesOfRow.numberOfLines();
+
+            Assertions.assertThat(numberOfLines).isEqualTo(3);
         }
     }
 }

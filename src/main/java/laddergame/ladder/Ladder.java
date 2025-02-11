@@ -20,8 +20,7 @@ public class Ladder {
     private final List<Row> rows;
 
 
-    @Builder(access = AccessLevel.PUBLIC)
-        // todo : 빌더만 접근 가능, 생성자는 접근 불가하도록 변경
+    @Builder
     Ladder(final int numberOfLines, final int height, BridgeDecisionMaker bridgeDecisionMaker) {
         if (numberOfLines < MIN_LINE_COUNT) {
             throw new IllegalArgumentException(INVALID_LINE_COUNT_MESSAGE);
@@ -60,10 +59,14 @@ public class Ladder {
         return resultLine;
     }
 
-    private Row rowOfHeight(int height) {
+    public Row rowOfHeight(int height) {
         if (height > this.height) {
             throw new IllegalArgumentException("사다리에 존재하지 않는 높이입니다");
         }
         return this.rows.get(height);
+    }
+
+    public int height() {
+        return this.height;
     }
 }
