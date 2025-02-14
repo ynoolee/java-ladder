@@ -2,11 +2,8 @@ package laddergame.view;
 
 import laddergame.Player;
 import laddergame.ladder.Ladder;
-import laddergame.ladder.Row;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -26,7 +23,7 @@ public class OutputViewTest {
 
     @Test
     void 플레이어_이름_입력_요청을_출력한다() {
-        output.printInputPlayerNames();
+        output.requestToInputPlayerNames();
 
         final String result = testOutputStream.toString();
 
@@ -38,29 +35,14 @@ public class OutputViewTest {
     void 여러_플레이어_이름을_주어진_순서대로_출력한다() {
         output.printNames(List.of(new Player("abc"), new Player("def"), new Player("ge")));
 
-        Assertions.assertThat(testOutputStream.toString()).isEqualTo("abc  def  ge   \n");
-    }
-
-    @Nested
-    class Row_가_주어졌을때 {
-
-        private final Row RIGHT_LEFT_NONE_ROW = Row.create(3, () -> true);
-
-        @Test
-        @DisplayName("브릿지는 5개의 유닛으로 구성하여 출력한다")
-        void test() {
-            output.printRow(RIGHT_LEFT_NONE_ROW);
-
-            Assertions.assertThat(testOutputStream.toString())
-                .isEqualTo("|-----|     |\n");
-        }
+        Assertions.assertThat(testOutputStream.toString()).isEqualTo("abc   def   ge    \n");
     }
 
     @Test
     void Ladder_를_출력한다() {
         Ladder ladder = Ladder.builder().numberOfLines(3).height(2).bridgeDecisionMaker(() -> true).build();
 
-        output.printLadder(ladder);
+        output.showLadder(ladder);
 
         Assertions.assertThat(testOutputStream.toString())
             .isEqualTo("|-----|     |\n|-----|     |\n");

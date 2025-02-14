@@ -13,6 +13,7 @@ public class OutputView {
     private static final String BRIDGE_UNIT = "-";
     private static final String HEIGHT_UNIT = "|";
     private static final String REQUEST_MESSAGE_TO_INPUT_PLAYERS = "참여할 사람 이름을 입력하세요. (이름은 쉼표(,)로 구분하세요)";
+    private static final String REQUEST_MESSAGE_TO_INPUT_HEIGHT = "최대 사다리 높이는 몇 개인가요?";
 
     private final Writer writer;
 
@@ -20,11 +21,15 @@ public class OutputView {
         this.writer = writer;
     }
 
-    public void printInputPlayerNames() {
+    public void requestToInputPlayerNames() {
         writer.println(REQUEST_MESSAGE_TO_INPUT_PLAYERS);
     }
 
-    public void printLadder(final Ladder ladder) {
+    public void requestToInputHeightOfLadder() {
+        writer.println(REQUEST_MESSAGE_TO_INPUT_HEIGHT);
+    }
+
+    public void showLadder(final Ladder ladder) {
         final int height = ladder.height();
 
         for (int currentHeight = 0; currentHeight < height; currentHeight++) {
@@ -32,7 +37,7 @@ public class OutputView {
         }
     }
 
-    public void printRow(final Row row) {
+    private void printRow(final Row row) {
         StringBuilder sb = new StringBuilder();
 
         final int numberOfLines = row.numberOfLines();
@@ -81,7 +86,7 @@ public class OutputView {
     }
 
     private String paddingName(String name) {
-        int diff = SPACE_LENGTH - name.length();
+        int diff = SPACE_LENGTH - name.length() + 1;
 
         return name + WHITESPACE.repeat(Math.max(0, diff));
     }

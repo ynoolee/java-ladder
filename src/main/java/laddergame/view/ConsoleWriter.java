@@ -2,7 +2,7 @@ package laddergame.view;
 
 import java.io.PrintStream;
 
-class ConsoleWriter implements Writer {
+public class ConsoleWriter implements Writer {
 
     private final PrintStream printStream;
 

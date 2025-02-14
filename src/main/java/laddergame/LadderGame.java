@@ -14,4 +14,9 @@ public class LadderGame {
     public int run(int lineNumber) {
         return this.ladder.destinationLineOf(lineNumber);
     }
+
+    // todo : 깊은 복사
+    public Ladder ladder() {
+        return this.ladder;
+    }
 }
