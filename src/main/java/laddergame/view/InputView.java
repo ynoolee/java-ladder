@@ -3,15 +3,18 @@ package laddergame.view;
 import java.util.Scanner;
 
 public class InputView {
-    public String getPlayers() {
-        final Scanner reader = new Scanner(System.in);
 
+    private final Scanner reader;
+
+    public InputView(final Scanner scanner) {
+        this.reader = scanner;
+    }
+
+    public String getNames() {
         return reader.next();
     }
 
     public Integer getHeight() {
-        final Scanner reader = new Scanner(System.in);
-
         return Integer.parseInt(reader.next());
     }
 }

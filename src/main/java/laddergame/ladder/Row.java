@@ -1,52 +1,71 @@
 package laddergame.ladder;
 
-import java.util.Arrays;
+import lombok.Builder;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public final class Row {
+public class Row {
 
+    private static final int MIN_LINE_COUNT = 2;
+    private static final String LESS_THAN_MIN_LINE_COUNT = "최소 2개의 라인이 존재해야 합니다";
+    private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
     private final List<Direction> points;
 
-    Row(List<Direction> points) {
-        this.points = points;
+    @Builder
+    private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+        validateInputs(numberOfLines, decisionMaker);
+        this.points = createPoints(numberOfLines, decisionMaker);
     }
 
-    public static Row create(int numberOfLines, BridgeDecisionMaker decisionMaker) {
-        Direction[] points = init(numberOfLines);
+    private void validateInputs(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+        if (MIN_LINE_COUNT > numberOfLines) {
+            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
+        }
+        if (decisionMaker == null) {
+            throw new IllegalArgumentException("브릿지 생성 전략이 주어지지 않았습니다");
+        }
+    }
 
-        for (int idx = 0; idx < numberOfLines; idx++) {
-            if (isPossibleToMakeBridge(idx, points) && decisionMaker.decide()) {
-                createBridgeAt(idx, points);
+    private List<Direction> createPoints(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+        var points = createInitializedPoints(numberOfLines);
+        addBridges(points, decisionMaker);
+
+        return points;
+    }
+
+    private List<Direction> createInitializedPoints(int numberOfLines) {
+        var initialPoints = new ArrayList<Direction>();
+        for (int i = 0; i < numberOfLines; i++) {
+            initialPoints.add(Direction.NONE);
+        }
+        return initialPoints;
+    }
+
+    private void addBridges(List<Direction> points, BridgeDecisionMaker decisionMaker) {
+        for (int i = 0; i < points.size() - 1; i++) {
+            if (isPossibleToMakeBridge(points, i) && decisionMaker.decide()) {
+                createBridgeAt(points, i);
             }
         }
-
-        return new Row(Arrays.stream(points).collect(Collectors.toList()));
     }
 
-    private static Direction[] init(int numberOfLines) {
-        return Stream.generate(() -> Direction.NONE)
-            .limit(numberOfLines)
-            .collect(Collectors.toList())
-            .toArray(new Direction[numberOfLines]);
+    private void createBridgeAt(List<Direction> points, int leftIndexOfBridge) {
+        var rightIndexOfBridge = leftIndexOfBridge + 1;
+        points.set(leftIndexOfBridge, Direction.RIGHT);
+        points.set(rightIndexOfBridge, Direction.LEFT);
     }
 
-    private static boolean isPossibleToMakeBridge(int index, Direction... points) {
-        return !isAlreadyBridge(index, points) && !isLast(index, points);
+    private boolean isPossibleToMakeBridge(List<Direction> points, int index) {
+        return !isAlreadyBridge(points, index) && !isLast(index, points);
     }
 
-    private static boolean isAlreadyBridge(int index, Direction... points) {
-        return points[index] != null && points[index].isBridge();
+    private boolean isAlreadyBridge(List<Direction> points, int index) {
+        return points.get(index) != null && points.get(index).isBridge();
     }
 
-    private static boolean isLast(int index, Direction... points) {
-        return index == points.length - 1;
-    }
-
-    private static void createBridgeAt(int index, Direction... points) {
-        points[index] = Direction.RIGHT;
-        points[index + 1] = Direction.LEFT;
+    private boolean isLast(int index, List<Direction> points) {
+        return index == points.size() - 1;
     }
 
     public Direction nextMoveDirection(final int lineNumber) {

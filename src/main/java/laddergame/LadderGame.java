@@ -1,21 +1,25 @@
 package laddergame;
 
 import laddergame.ladder.BridgeDecisionMaker;
+import laddergame.ladder.Height;
 import laddergame.ladder.Ladder;
 
 public class LadderGame {
 
     private final Ladder ladder;
 
-    public LadderGame(final int numberOfLines, final int height, final BridgeDecisionMaker decisionMaker) {
-        this.ladder = Ladder.builder().numberOfLines(numberOfLines).height(height).bridgeDecisionMaker(decisionMaker).build();
+    public LadderGame(final int numberOfLines, final Height height, final BridgeDecisionMaker decisionMaker) {
+        this.ladder = Ladder.builder()
+            .numberOfLines(numberOfLines)
+            .height(height)
+            .bridgeDecisionMaker(decisionMaker)
+            .build();
     }
 
     public int run(int lineNumber) {
         return this.ladder.destinationLineOf(lineNumber);
     }
 
-    // todo : 깊은 복사
     public Ladder ladder() {
         return this.ladder;
     }
