@@ -1,5 +1,6 @@
 package laddergame.view;
 
+import laddergame.ladder.Height;
 import laddergame.ladder.Ladder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ public class OutputViewTest {
 
     @Test
     void Ladder_를_출력한다() {
-        var ladder = Ladder.builder().numberOfLines(3).height(2).bridgeDecisionMaker(() -> true).build();
+        var ladder = Ladder.builder().numberOfLines(3).height(new Height(2)).bridgeDecisionMaker(() -> true).build();
 
         outputView.showLadder(ladder);
 

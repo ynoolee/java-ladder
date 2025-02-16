@@ -1,5 +1,6 @@
 package laddergame;
 
+import laddergame.ladder.Height;
 import laddergame.view.ConsoleWriter;
 import laddergame.view.InputView;
 import laddergame.view.OutputView;
@@ -25,7 +26,7 @@ public class GameController {
         final var ladderHeight = inputView.getHeight();
 
         outputView.printNames(names.stream().map(Name::getName).collect(Collectors.toList()));
-        final var ladderGame = new LadderGame(names.size(), ladderHeight, () -> new Random().nextBoolean());
+        final var ladderGame = new LadderGame(names.size(), new Height(ladderHeight), () -> new Random().nextBoolean());
         outputView.showLadder(ladderGame.ladder());
     }
 

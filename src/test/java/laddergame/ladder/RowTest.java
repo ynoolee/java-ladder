@@ -28,7 +28,7 @@ public class RowTest {
 
     @Nested
     class RIGHT_LEFT_NONE_으로_구성된_ROW {
-        private final Row RIGHT_LEFT_NONE_ROW = Row.builder().numberOfLines(3).decisionMaker(() -> Boolean.TRUE).build();
+        private final Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
 
         @Test
         void row_의_n_번_지점의_방향을_알려준다() {
@@ -57,5 +57,9 @@ public class RowTest {
 
             Assertions.assertThat(numberOfLines).isEqualTo(3);
         }
+    }
+
+    private Row RIGHT_LEFT_NONE_인_ROW_생성() {
+        return Row.builder().numberOfLines(3).decisionMaker(() -> Boolean.TRUE).build();
     }
 }
