@@ -1,5 +1,7 @@
 package laddergame.ladder;
 
+import lombok.Builder;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,22 +9,28 @@ import java.util.stream.Stream;
 
 public final class Row {
 
+    private static final int MIN_LINE_COUNT = 2;
+    private static final String LESS_THAN_MIN_LINE_COUNT = "최소 2개의 라인이 존재해야 합니다";
+    private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
     private final List<Direction> points;
 
-    Row(List<Direction> points) {
-        this.points = points;
-    }
+    @Builder
+    private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+        if (MIN_LINE_COUNT > numberOfLines) {
+            throw new IllegalArgumentException(LESS_THAN_MIN_LINE_COUNT);
+        }
+        if (decisionMaker == null) {
+            throw new IllegalArgumentException(EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE);
+        }
+        var points = init(numberOfLines);
 
-    public static Row create(int numberOfLines, BridgeDecisionMaker decisionMaker) {
-        Direction[] points = init(numberOfLines);
-
-        for (int idx = 0; idx < numberOfLines; idx++) {
-            if (isPossibleToMakeBridge(idx, points) && decisionMaker.decide()) {
-                createBridgeAt(idx, points);
+        for (var pointIndex = 0; pointIndex < numberOfLines; pointIndex++) {
+            if (isPossibleToMakeBridge(pointIndex, points) && decisionMaker.decide()) {
+                createBridgeAt(pointIndex, points);
             }
         }
 
-        return new Row(Arrays.stream(points).collect(Collectors.toList()));
+        this.points = Arrays.stream(points).collect(Collectors.toList());
     }
 
     private static Direction[] init(int numberOfLines) {

@@ -1,6 +1,5 @@
 package laddergame.ladder;
 
-import laddergame.ladder.Ladder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -29,5 +28,15 @@ public class LadderTest {
 
         Assertions.assertThatThrownBy(() -> new Ladder(numberOfLines, invalidHeight, () -> new Random().nextBoolean()))
             .hasMessage("사다리 높이는 1이상 이어야 합니다");
+    }
+
+    @Test
+    void 사다리의_높이를_알려준다() {
+        final var inputHeight = 2;
+        final var ladder = new Ladder(3, inputHeight, () -> new Random().nextBoolean());
+
+        final var height = ladder.height();
+
+        Assertions.assertThat(height).isEqualTo(inputHeight);
     }
 }
