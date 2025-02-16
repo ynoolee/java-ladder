@@ -1,6 +1,5 @@
 package laddergame.view;
 
-import laddergame.Player;
 import laddergame.ladder.Ladder;
 import laddergame.ladder.Row;
 
@@ -30,7 +29,7 @@ public class OutputView {
     }
 
     public void showLadder(final Ladder ladder) {
-        final int height = ladder.height();
+        final var height = ladder.height();
 
         for (int currentHeight = 0; currentHeight < height; currentHeight++) {
             printRow(ladder.rowOfHeight(currentHeight));
@@ -38,17 +37,17 @@ public class OutputView {
     }
 
     private void printRow(final Row row) {
-        StringBuilder sb = new StringBuilder();
+        var rowBuilder = new StringBuilder();
 
-        final int numberOfLines = row.numberOfLines();
+        var lastLineIndex = row.numberOfLines() - 1;
 
-        for (int currentLine = 0; currentLine < numberOfLines - 1; currentLine++) {
-            appendLine(sb);
-            appendLineConnection(row, currentLine, sb);
+        for (var currentLine = 0; currentLine < lastLineIndex; currentLine++) {
+            appendLine(rowBuilder);
+            appendLineConnection(row, currentLine, rowBuilder);
         }
-        appendLastLine(sb);
+        appendLastLine(rowBuilder);
 
-        writer.println(sb.toString());
+        writer.println(rowBuilder.toString());
     }
 
     private void appendLineConnection(final Row row, final int currentLine, final StringBuilder sb) {
@@ -75,18 +74,18 @@ public class OutputView {
         return WHITESPACE.repeat(SPACE_LENGTH);
     }
 
-    public void printNames(final List<Player> players) {
-        StringBuilder sb = new StringBuilder();
+    public void printNames(final List<String> names) {
+        var namesBuilder = new StringBuilder();
 
-        for (Player player : players) {
-            sb.append(paddingName(player.getName()));
-        }
+        names.stream()
+            .map(this::paddingName)
+            .forEach(namesBuilder::append);
 
-        writer.println(sb.toString());
+        writer.println(namesBuilder.toString());
     }
 
     private String paddingName(String name) {
-        int diff = SPACE_LENGTH - name.length() + 1;
+        var diff = SPACE_LENGTH - name.length() + 1;
 
         return name + WHITESPACE.repeat(Math.max(0, diff));
     }
