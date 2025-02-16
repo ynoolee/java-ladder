@@ -18,6 +18,14 @@ public class Ladder {
 
     @Builder
     Ladder(final int numberOfLines, final int height, BridgeDecisionMaker bridgeDecisionMaker) {
+        validateInputs(numberOfLines, height, bridgeDecisionMaker);
+
+        this.rows = createRows(numberOfLines, height, bridgeDecisionMaker);
+    }
+
+    private void validateInputs(
+        final int numberOfLines, final int height, final BridgeDecisionMaker bridgeDecisionMaker
+    ) {
         if (numberOfLines < MIN_LINE_COUNT) {
             throw new IllegalArgumentException(INVALID_LINE_COUNT_MESSAGE);
         }
@@ -28,8 +36,6 @@ public class Ladder {
         if (bridgeDecisionMaker == null) {
             throw new IllegalArgumentException(EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE);
         }
-
-        this.rows = createRows(numberOfLines, height, bridgeDecisionMaker);
     }
 
     private List<Row> createRows(final int numberOfLines, final int height, final BridgeDecisionMaker bridgeDecisionMaker) {

@@ -11,9 +11,13 @@ public class Name {
     private final String name;
 
     public Name(final String name) {
+        validateInput(name);
+        this.name = name;
+    }
+
+    private void validateInput(final String name) {
         if (name == null || name.isBlank() || name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(INVALID_NAME_MESSAGE);
         }
-        this.name = name;
     }
 }
