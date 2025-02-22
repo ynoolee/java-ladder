@@ -18,15 +18,15 @@ public class GameController {
         final var playerNames = inputView.getNames();
 
         final var nameParser = new StringParser(",");
-        final var names = nameParser.parse(playerNames).stream()
-            .map(Name::new)
+        final var players = nameParser.parse(playerNames).stream()
+            .map(Player::new)
             .collect(Collectors.toList());
 
         outputView.requestToInputHeightOfLadder();
         final var ladderHeight = inputView.getHeight();
 
-        outputView.printNames(names.stream().map(Name::getName).collect(Collectors.toList()));
-        final var ladderGame = new LadderGame(names.size(), new Height(ladderHeight), () -> new Random().nextBoolean());
+        outputView.printNames(players.stream().map(Player::getName).collect(Collectors.toList()));
+        final var ladderGame = new LadderGame(players.size(), new Height(ladderHeight), () -> new Random().nextBoolean());
         outputView.showLadder(ladderGame.ladder());
     }
 

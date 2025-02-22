@@ -27,7 +27,7 @@ public class LadderTest {
         final var ladder = 라인개수3인_사다리를_생성(inputHeight);
 
         // when
-        final var height = ladder.height();
+        final var height = new Height(ladder.height());
 
         // then
         Assertions.assertThat(height).isEqualTo(inputHeight);

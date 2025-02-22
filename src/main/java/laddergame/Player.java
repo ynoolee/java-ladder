@@ -2,15 +2,15 @@ package laddergame;
 
 import lombok.Getter;
 
-public class Name {
+@Getter
+public class Player {
 
     private static final String INVALID_NAME_MESSAGE = "플레이어 이름은 공백이 아닌 글자 1글자 이상 5글자 이하여야 합니다";
     private static final int MAX_LENGTH = 5;
 
-    @Getter
     private final String name;
 
-    public Name(final String name) {
+    public Player(final String name) {
         validateInput(name);
         this.name = name;
     }
