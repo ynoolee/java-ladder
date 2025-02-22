@@ -2,6 +2,8 @@ package laddergame;
 
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 public class Player {
 
@@ -19,5 +21,18 @@ public class Player {
         if (name == null || name.isBlank() || name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(INVALID_NAME_MESSAGE);
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        final Player player = (Player) o;
+        return Objects.equals(name, player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

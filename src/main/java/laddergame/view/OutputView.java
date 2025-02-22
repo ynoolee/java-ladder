@@ -1,5 +1,6 @@
 package laddergame.view;
 
+import laddergame.Results;
 import laddergame.ladder.Ladder;
 import laddergame.ladder.Row;
 
@@ -12,6 +13,9 @@ public class OutputView {
     private static final String BRIDGE_UNIT = "-";
     private static final String HEIGHT_UNIT = "|";
     private static final String REQUEST_MESSAGE_TO_INPUT_PLAYERS = "참여할 사람 이름을 입력하세요. (이름은 쉼표(,)로 구분하세요)";
+    private static final String REQUEST_MESSAGE_TO_INPUT_REWARDS = "실행 결과를 입력하세요. (결과는 쉼표(,)로 구분하세요)";
+    private static final String REQUEST_MESSAGE_TO_INPUT_CURIOUS_RESULT = "결과를 보고 싶은 사람은?";
+    private static final String MESSAGE_RESULT = "실행 결과";
     private static final String REQUEST_MESSAGE_TO_INPUT_HEIGHT = "최대 사다리 높이는 몇 개인가요?";
 
     private final Writer writer;
@@ -24,6 +28,10 @@ public class OutputView {
         writer.println(REQUEST_MESSAGE_TO_INPUT_PLAYERS);
     }
 
+    public void requestToInputRewards() {
+        writer.println(REQUEST_MESSAGE_TO_INPUT_REWARDS);
+    }
+
     public void requestToInputHeightOfLadder() {
         writer.println(REQUEST_MESSAGE_TO_INPUT_HEIGHT);
     }
@@ -31,9 +39,7 @@ public class OutputView {
     public void showLadder(final Ladder ladder) {
         final var height = ladder.height();
 
-        for (int currentHeight = 0; currentHeight < height; currentHeight++) {
-            printRow(ladder.rowOfHeight(currentHeight));
-        }
+        ladder.allLadderRows().forEach(this::printRow);
     }
 
     private void printRow(final Row row) {
@@ -74,19 +80,34 @@ public class OutputView {
         return WHITESPACE.repeat(SPACE_LENGTH);
     }
 
-    public void printNames(final List<String> names) {
+    public void printPaddingElements(final List<String> elements) {
         var namesBuilder = new StringBuilder();
 
-        names.stream()
-            .map(this::paddingName)
+        elements.stream()
+            .map(this::paddingElement)
             .forEach(namesBuilder::append);
 
         writer.println(namesBuilder.toString());
     }
 
-    private String paddingName(String name) {
-        var diff = SPACE_LENGTH - name.length() + 1;
+    public void printRequestWhom() {
+        writer.println(REQUEST_MESSAGE_TO_INPUT_CURIOUS_RESULT);
+    }
 
-        return name + WHITESPACE.repeat(Math.max(0, diff));
+    private String paddingElement(String element) {
+        var diff = SPACE_LENGTH - element.length() + 1;
+
+        return element + WHITESPACE.repeat(Math.max(0, diff));
+    }
+
+    public void printResult(Results results, String target) {
+        writer.println(MESSAGE_RESULT);
+        if ("all".equals(target)) {
+            results.allResults().forEach((name, result) ->
+                writer.println(name.getName() + " : " + result.getValue())
+            );
+        } else {
+            writer.println(results.resultOf(target));
+        }
     }
 }

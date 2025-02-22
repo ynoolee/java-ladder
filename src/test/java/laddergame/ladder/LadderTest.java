@@ -30,7 +30,7 @@ public class LadderTest {
         final var height = new Height(ladder.height());
 
         // then
-        Assertions.assertThat(height).isEqualTo(inputHeight);
+        Assertions.assertThat(height).isEqualTo(new Height(inputHeight));
     }
 
     private Ladder createLadder(int numberOfLines, final Height height) {

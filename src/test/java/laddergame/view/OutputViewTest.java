@@ -36,7 +36,7 @@ public class OutputViewTest {
 
     @Test
     void 여러_플레이어_이름을_주어진_순서대로_출력한다() {
-        outputView.printNames(List.of("abc", "def", "ge"));
+        outputView.printPaddingElements(List.of("abc", "def", "ge"));
 
         var resultOutput = testOutputStream.toString();
 

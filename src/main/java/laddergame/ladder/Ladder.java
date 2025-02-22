@@ -12,13 +12,19 @@ public class Ladder {
     private static final String INVALID_LINE_COUNT_MESSAGE = "사다리 라인은 2개 이상이어야 합니다";
     private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
 
-    private final List<Row> rows;
+    private final Rows rows;
+    private final int numberOfLines;
+
+    public Ladder(final List<Row> rows, int numberOfLines) {
+        this.rows = new Rows(rows);
+        this.numberOfLines = numberOfLines;
+    }
 
     @Builder
     private Ladder(final int numberOfLines, Height height, BridgeDecisionMaker bridgeDecisionMaker) {
         validateInputs(numberOfLines, bridgeDecisionMaker);
-
-        this.rows = createRows(numberOfLines, height.getHeight(), bridgeDecisionMaker);
+        this.numberOfLines = numberOfLines;
+        this.rows = new Rows(createRows(numberOfLines, height.getHeight(), bridgeDecisionMaker));
     }
 
     private void validateInputs(
@@ -33,36 +39,41 @@ public class Ladder {
         }
     }
 
-    private List<Row> createRows(final int numberOfLines, final int height, final BridgeDecisionMaker bridgeDecisionMaker) {
+    private static List<Row> createRows(final int numberOfLines, final int height, final BridgeDecisionMaker bridgeDecisionMaker) {
         return Stream.generate(() -> Row.builder().numberOfLines(numberOfLines).decisionMaker(bridgeDecisionMaker).build())
             .limit(height)
             .collect(Collectors.toList());
     }
 
-    // todo : 1층에 대해서만 하는 상태
     public int destinationLineOf(int startLine) {
-        var resultLine = startLine;
+        int resultLine = startLine;
 
-        var nextDirection = rowOfHeight(0).nextMoveDirection(startLine);
-        if (nextDirection.isBridge()) {
-            if (Direction.LEFT.equals(nextDirection)) {
-                resultLine--;
-            } else if (Direction.RIGHT.equals(nextDirection)) {
-                resultLine++;
-            }
+        for (Row row : rows.rows()) {
+            resultLine = calculateNextLine(resultLine, row.nextMoveDirection(resultLine));
         }
 
         return resultLine;
     }
 
-    public Row rowOfHeight(int height) {
-        if (height >= height()) {
-            throw new IllegalArgumentException("사다리에 존재하지 않는 높이입니다");
+    private int calculateNextLine(int currentLine, Direction moveDirection) {
+        if (Direction.LEFT.equals(moveDirection)) {
+            return currentLine - 1;
         }
-        return this.rows.get(height);
+        if (Direction.RIGHT.equals(moveDirection)) {
+            return currentLine + 1;
+        }
+        return currentLine;
+    }
+
+    public List<Row> allLadderRows() {
+        return this.rows.rows();
     }
 
     public int height() {
-        return rows.size();
+        return this.rows.size();
+    }
+
+    public int numberOfLines() {
+        return this.numberOfLines;
     }
 }

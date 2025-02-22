@@ -12,6 +12,17 @@ public class Row {
     private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
     private final List<Direction> points;
 
+    public Row(List<Direction> points) {
+        validatePoints(points);
+        this.points = points;
+    }
+
+    private void validatePoints(List<Direction> points) {
+        if (points == null || MIN_LINE_COUNT > points.size()) {
+            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
+        }
+    }
+
     @Builder
     private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         validateInputs(numberOfLines, decisionMaker);
