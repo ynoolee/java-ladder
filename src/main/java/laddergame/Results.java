@@ -13,9 +13,8 @@ public class Results {
         return result.get(player);
     }
 
-    public String resultOf(String player) {
-        return result.get(new Player(player))
-            .getValue();
+    public Reward resultOf(String player) {
+        return result.get(new Player(player));
     }
 
     public Map<Player, Reward> allResults() {

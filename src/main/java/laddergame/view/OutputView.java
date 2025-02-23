@@ -107,7 +107,7 @@ public class OutputView {
                 writer.println(name.getName() + " : " + result.getValue())
             );
         } else {
-            writer.println(results.resultOf(target));
+            writer.println(results.resultOf(target).getValue());
         }
     }
 }
