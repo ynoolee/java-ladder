@@ -17,19 +17,48 @@ public class Row {
         this.points = points;
     }
 
+    @Builder
+    private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+        validateRowCreationParams(numberOfLines, decisionMaker);
+
+        this.points = createValidatedPoints(numberOfLines, decisionMaker);
+    }
+
     private void validatePoints(List<Direction> points) {
         if (points == null || MIN_LINE_COUNT > points.size()) {
             throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
         }
+
+        for (int cur = 1; cur < points.size(); cur++) {
+            int bef = cur - 1;
+
+            var current = points.get(cur);
+            var before = points.get(bef);
+
+            switch (current) {
+                case NONE:
+                    if (Direction.RIGHT.equals(before)) {
+                        throw new IllegalArgumentException();
+                    }
+                    break;
+                case LEFT:
+                    if (!Direction.RIGHT.equals(before)) {
+                        throw new IllegalArgumentException();
+                    }
+                    break;
+                case RIGHT:
+                    if (cur == points.size() - 1) {
+                        throw new IllegalArgumentException();
+                    }
+                    if (Direction.LEFT.equals(before)) {
+                        throw new IllegalArgumentException();
+                    }
+                    break;
+            }
+        }
     }
 
-    @Builder
-    private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
-        validateInputs(numberOfLines, decisionMaker);
-        this.points = createPoints(numberOfLines, decisionMaker);
-    }
-
-    private void validateInputs(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+    private void validateRowCreationParams(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         if (MIN_LINE_COUNT > numberOfLines) {
             throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
         }
@@ -38,10 +67,11 @@ public class Row {
         }
     }
 
-    private List<Direction> createPoints(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+    private List<Direction> createValidatedPoints(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         var points = createInitializedPoints(numberOfLines);
         addBridges(points, decisionMaker);
 
+        validatePoints(points);
         return points;
     }
 
