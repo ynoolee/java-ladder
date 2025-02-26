@@ -10,7 +10,7 @@ public class InputView {
         this.reader = scanner;
     }
 
-    public String getNames() {
+    public String getOneLine() {
         return reader.next();
     }
 
