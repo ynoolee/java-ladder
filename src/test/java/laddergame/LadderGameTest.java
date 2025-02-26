@@ -65,7 +65,7 @@ public class LadderGameTest {
             new Ladder(List.of(
                 new Row(List.of(Direction.RIGHT, Direction.LEFT, Direction.NONE)),
                 new Row(List.of(Direction.NONE, Direction.RIGHT, Direction.LEFT))
-            ),3)
+            ), 3)
         );
     }
 
@@ -96,7 +96,8 @@ public class LadderGameTest {
                 createRewards("line1", "line2", "line3")
             );
 
-            Assertions.assertThat(result.resultOf("play1")).isEqualTo("line1");
+            Assertions.assertThat(result.resultOf("play1"))
+                .isEqualTo(Reward.of("line1"));
         }
     }
 
@@ -106,12 +107,13 @@ public class LadderGameTest {
 
         @Test
         public void 라인_0과_1의_도착지점_결과가_뒤바뀐다() {
-            final var result =  game.runWith(
+            final var result = game.runWith(
                 createPlayers("play1", "play2"),
                 createRewards("line1", "line2")
             );
 
-            Assertions.assertThat(result.resultOf("play1")).isEqualTo("line2");
+            Assertions.assertThat(result.resultOf("play1"))
+                .isEqualTo(Reward.of("line2"));
         }
     }
 
@@ -126,7 +128,8 @@ public class LadderGameTest {
                 createRewards("line1", "line2")
             );
 
-            Assertions.assertThat(result.resultOf("play1")).isEqualTo("line1");
+            Assertions.assertThat(result.resultOf("play1"))
+                .isEqualTo(Reward.of("line1"));
         }
     }
 
@@ -141,12 +144,13 @@ public class LadderGameTest {
 
         @Test
         public void 라인_0_의_결과는_2이다() {
-            final var result =  game.runWith(
+            final var result = game.runWith(
                 createPlayers("play1", "play2", "play3"),
                 createRewards("line1", "line2", "line3")
             );
 
-            Assertions.assertThat(result.resultOf("play1")).isEqualTo("line3");
+            Assertions.assertThat(result.resultOf("play1"))
+                .isEqualTo(Reward.of("line3"));
         }
 
     }

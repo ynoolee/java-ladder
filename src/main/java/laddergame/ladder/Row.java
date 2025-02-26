@@ -10,6 +10,7 @@ public class Row {
     private static final int MIN_LINE_COUNT = 2;
     private static final String LESS_THAN_MIN_LINE_COUNT = "최소 2개의 라인이 존재해야 합니다";
     private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
+
     private final List<Direction> points;
 
     public Row(List<Direction> points) {
@@ -17,31 +18,43 @@ public class Row {
         this.points = points;
     }
 
-    private void validatePoints(List<Direction> points) {
-        if (points == null || MIN_LINE_COUNT > points.size()) {
-            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
-        }
-    }
-
     @Builder
     private Row(int numberOfLines, BridgeDecisionMaker decisionMaker) {
-        validateInputs(numberOfLines, decisionMaker);
-        this.points = createPoints(numberOfLines, decisionMaker);
+        validateRowCreationParams(numberOfLines, decisionMaker);
+
+        this.points = createValidatedPoints(numberOfLines, decisionMaker);
     }
 
-    private void validateInputs(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+    private void validatePoints(List<Direction> points) {
+        if (points == null || MIN_LINE_COUNT > points.size()) {
+            throw new IllegalArgumentException(LESS_THAN_MIN_LINE_COUNT);
+        }
+
+        for (int i = 1; i < points.size(); i++) {
+            Direction current = points.get(i);
+            Direction previous = points.get(i - 1);
+            boolean isLastPosition = (i == points.size() - 1);
+
+            if (!current.isValidPoint(previous, isLastPosition)) {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    private void validateRowCreationParams(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         if (MIN_LINE_COUNT > numberOfLines) {
-            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
+            throw new IllegalArgumentException(LESS_THAN_MIN_LINE_COUNT);
         }
         if (decisionMaker == null) {
-            throw new IllegalArgumentException("브릿지 생성 전략이 주어지지 않았습니다");
+            throw new IllegalArgumentException(EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE);
         }
     }
 
-    private List<Direction> createPoints(int numberOfLines, BridgeDecisionMaker decisionMaker) {
+    private List<Direction> createValidatedPoints(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         var points = createInitializedPoints(numberOfLines);
         addBridges(points, decisionMaker);
 
+        validatePoints(points);
         return points;
     }
 
