@@ -10,6 +10,7 @@ public class Row {
     private static final int MIN_LINE_COUNT = 2;
     private static final String LESS_THAN_MIN_LINE_COUNT = "최소 2개의 라인이 존재해야 합니다";
     private static final String EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE = "브릿지 생성 전략이 주어지지 않았습니다";
+
     private final List<Direction> points;
 
     public Row(List<Direction> points) {
@@ -26,44 +27,26 @@ public class Row {
 
     private void validatePoints(List<Direction> points) {
         if (points == null || MIN_LINE_COUNT > points.size()) {
-            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
+            throw new IllegalArgumentException(LESS_THAN_MIN_LINE_COUNT);
         }
 
-        for (int cur = 1; cur < points.size(); cur++) {
-            int bef = cur - 1;
+        for (int i = 1; i < points.size(); i++) {
+            Direction current = points.get(i);
+            Direction previous = points.get(i - 1);
+            boolean isLastPosition = (i == points.size() - 1);
 
-            var current = points.get(cur);
-            var before = points.get(bef);
-
-            switch (current) {
-                case NONE:
-                    if (Direction.RIGHT.equals(before)) {
-                        throw new IllegalArgumentException();
-                    }
-                    break;
-                case LEFT:
-                    if (!Direction.RIGHT.equals(before)) {
-                        throw new IllegalArgumentException();
-                    }
-                    break;
-                case RIGHT:
-                    if (cur == points.size() - 1) {
-                        throw new IllegalArgumentException();
-                    }
-                    if (Direction.LEFT.equals(before)) {
-                        throw new IllegalArgumentException();
-                    }
-                    break;
+            if (!current.isValidPoint(previous, isLastPosition)) {
+                throw new IllegalArgumentException();
             }
         }
     }
 
     private void validateRowCreationParams(int numberOfLines, BridgeDecisionMaker decisionMaker) {
         if (MIN_LINE_COUNT > numberOfLines) {
-            throw new IllegalArgumentException("최소 2개의 라인이 존재해야 합니다");
+            throw new IllegalArgumentException(LESS_THAN_MIN_LINE_COUNT);
         }
         if (decisionMaker == null) {
-            throw new IllegalArgumentException("브릿지 생성 전략이 주어지지 않았습니다");
+            throw new IllegalArgumentException(EMPTY_BRIDGE_CREATION_STRATEGY_MESSAGE);
         }
     }
 

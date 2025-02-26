@@ -3,11 +3,11 @@ package laddergame.ladder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -88,7 +88,12 @@ class RowTest {
             "RIGHT,RIGHT",
             "LEFT,LEFT"
         })
-        void shouldThrowExceptionWhenRightAndLeftAreNotPaired(Direction first, Direction second) {
+        void shouldThrowExceptionWhenRightAndLeftAreNotPaired(
+            @ConvertWith(DirectionArgumentsConverter.class)
+            Direction first,
+            @ConvertWith(DirectionArgumentsConverter.class)
+            Direction second
+        ) {
             // given
             List<Direction> invalidPair = List.of(first, second);
 
@@ -119,28 +124,36 @@ class RowTest {
                 .isThrownBy(() -> new Row(leftAlone));
         }
 
-        @ParameterizedTest
+        @Nested
         @DisplayName("다양한 유효한 Row 생성 케이스")
-        @CsvSource({
-            "'NONE,NONE,NONE', 3, '브릿지가 없는 Row'",
-            "'NONE,RIGHT,LEFT', 3, '가장 오른쪽에 브릿지가 있는 Row'",
-            "'RIGHT,LEFT,NONE', 3, '가장 왼쪽에 브릿지가 있는 Row'"
-        })
-        void shouldCreateValidRows(String directionString, int expectedNumberOfLines, String description) {
-            // given
-            List<Direction> directions = parseDirections(directionString);
+        class ValidRowDirection {
 
-            // when
-            Row row = new Row(directions);
+            @Test
+            @DisplayName("브릿지가 없는 ROW 생성에 성공한다")
+            void test() {
+                final var row = new Row(List.of(Direction.NONE, Direction.NONE, Direction.NONE));
 
-            // then
-            assertThat(row.numberOfLines()).isEqualTo(expectedNumberOfLines);
-        }
+                assertThat(row.numberOfLines())
+                    .isEqualTo(3);
+            }
 
-        private List<Direction> parseDirections(String directionString) {
-            return List.of(directionString.split(",")).stream()
-                .map(Direction::valueOf)
-                .collect(Collectors.toList());
+            @Test
+            @DisplayName("가장 오른쪽에 브릿지가 있는 Row 생성에 성공한다")
+            void test1() {
+                final var row = new Row(List.of(Direction.NONE, Direction.RIGHT, Direction.LEFT));
+
+                assertThat(row.numberOfLines())
+                    .isEqualTo(3);
+            }
+
+            @Test
+            @DisplayName("가장 왼쪽에 브릿지가 있는 Row 생성에 성공한다")
+            void test2() {
+                final var row = new Row(List.of(Direction.RIGHT, Direction.LEFT, Direction.NONE));
+
+                assertThat(row.numberOfLines())
+                    .isEqualTo(3);
+            }
         }
     }
 
