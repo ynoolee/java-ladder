@@ -86,8 +86,6 @@ public class LadderGameTest {
     class 사람_n명_선이_없는_사다리게임 {
 
         private final LadderGame game = 사람n명인_사다리게임_생성();
-        private final LadderPlayers ladderPlayers = createPlayers("play1", "play2", "play3");
-        private final LadderRewards ladderRewards = createRewards("line1", "line2", "line3");
 
         @Test
         public void 라인_0_도착지점은_0이다() {

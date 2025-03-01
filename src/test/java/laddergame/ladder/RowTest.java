@@ -13,16 +13,15 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@DisplayName("Row 클래스 테스트")
 class RowTest {
 
     @Nested
-    @DisplayName("Row 생성 검증 - Builder 패턴 사용 시")
+    @DisplayName("자동 생성 시")
     class RowBuilderValidation {
 
         @Test
-        @DisplayName("라인 개수가 2개 미만이면 예외가 발생한다")
-        void shouldThrowExceptionWhenNumberOfLinesIsLessThanTwo() {
+        @DisplayName("라인 개수가 2개 미만이면 생성에 실패한다")
+        void whenNumberOfLinesIsLessThanTwo() {
             // given
             int invalidNumberOfLines = 1;
 
@@ -35,8 +34,8 @@ class RowTest {
         }
 
         @Test
-        @DisplayName("브릿지 생성 전략이 null이면 예외가 발생한다")
-        void shouldThrowExceptionWhenDecisionMakerIsNull() {
+        @DisplayName("브릿지 생성 전략이 주어지지 않으면 생성에 실패한다")
+        void whenDecisionMakerIsNull() {
             // given
             int validNumberOfLines = 2;
 
@@ -49,28 +48,29 @@ class RowTest {
         }
 
         @Test
-        @DisplayName("유효한 파라미터로 Row가 정상 생성된다")
-        void shouldCreateRowWithValidParameters() {
+        @DisplayName("연속된 브릿지를 갖지 않는 Row 를 생성한다")
+        @RepeatedTest(value = 10)
+        void createRandomRow() {
             // given
-            int validNumberOfLines = 3;
+            int numberOfLinesForPotentialConsecutiveBridges = 5;
 
             // when
             Row row = Row.builder()
-                .numberOfLines(validNumberOfLines)
+                .numberOfLines(numberOfLinesForPotentialConsecutiveBridges)
                 .decisionMaker(() -> true)
                 .build();
 
             // then
-            assertThat(row.numberOfLines()).isEqualTo(validNumberOfLines);
+            assertThat(row.numberOfLines()).isEqualTo(numberOfLinesForPotentialConsecutiveBridges);
         }
     }
 
     @Nested
-    @DisplayName("Row 생성 검증 - Direction 리스트 사용 시")
+    @DisplayName("Row 생성에 주어지는 포인트 리스트는 ")
     class RowDirectionListValidation {
 
         @Test
-        @DisplayName("연속된 브릿지는 존재할 수 없다")
+        @DisplayName("연속된 브릿지가 존재할 수 없다")
         void shouldThrowExceptionWhenBridgesAreConsecutive() {
             // given
             List<Direction> consecutiveBridges = List.of(
@@ -90,12 +90,12 @@ class RowTest {
         })
         void shouldThrowExceptionWhenRightAndLeftAreNotPaired(
             @ConvertWith(DirectionArgumentsConverter.class)
-            Direction first,
+            Direction left,
             @ConvertWith(DirectionArgumentsConverter.class)
-            Direction second
+            Direction right
         ) {
             // given
-            List<Direction> invalidPair = List.of(first, second);
+            List<Direction> invalidPair = List.of(left, right);
 
             // when & then
             assertThatIllegalArgumentException()
@@ -103,7 +103,7 @@ class RowTest {
         }
 
         @Test
-        @DisplayName("RIGHT는 단독으로 존재할 수 없다")
+        @DisplayName("RIGHT 가 단독으로 존재할 수 없다")
         void shouldThrowExceptionWhenRightExistsAlone() {
             // given
             List<Direction> rightAlone = List.of(Direction.RIGHT, Direction.NONE);
@@ -114,7 +114,7 @@ class RowTest {
         }
 
         @Test
-        @DisplayName("LEFT는 단독으로 존재할 수 없다")
+        @DisplayName("LEFT 가 단독으로 존재할 수 없다")
         void shouldThrowExceptionWhenLeftExistsAlone() {
             // given
             List<Direction> leftAlone = List.of(Direction.NONE, Direction.LEFT);
@@ -124,73 +124,72 @@ class RowTest {
                 .isThrownBy(() -> new Row(leftAlone));
         }
 
-        @Nested
-        @DisplayName("다양한 유효한 Row 생성 케이스")
-        class ValidRowDirection {
-
-            @Test
-            @DisplayName("브릿지가 없는 ROW 생성에 성공한다")
-            void test() {
-                final var row = new Row(List.of(Direction.NONE, Direction.NONE, Direction.NONE));
-
-                assertThat(row.numberOfLines())
-                    .isEqualTo(3);
-            }
-
-            @Test
-            @DisplayName("가장 오른쪽에 브릿지가 있는 Row 생성에 성공한다")
-            void test1() {
-                final var row = new Row(List.of(Direction.NONE, Direction.RIGHT, Direction.LEFT));
-
-                assertThat(row.numberOfLines())
-                    .isEqualTo(3);
-            }
-
-            @Test
-            @DisplayName("가장 왼쪽에 브릿지가 있는 Row 생성에 성공한다")
-            void test2() {
-                final var row = new Row(List.of(Direction.RIGHT, Direction.LEFT, Direction.NONE));
-
-                assertThat(row.numberOfLines())
-                    .isEqualTo(3);
-            }
-        }
-    }
-
-    @Nested
-    class RIGHT_LEFT_NONE_으로_구성된_ROW {
-        private final Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
 
         @Test
-        void row_의_n_번_지점의_방향을_알려준다() {
-            Direction nextDirection = RIGHT_LEFT_NONE_ROW.nextMoveDirection(0);
+        @DisplayName("브릿지가 없는 ROW 생성에 성공한다")
+        void test() {
+            final var row = new Row(List.of(Direction.NONE, Direction.NONE, Direction.NONE));
 
-            Assertions.assertThat(nextDirection).isEqualTo(Direction.RIGHT);
+            assertThat(row.numberOfLines())
+                .isEqualTo(3);
         }
 
         @Test
-        void row_에_존재하지_않는_지점의_방향을_알려달라고하면_예외를_발생시킨다() {
-            Assertions.assertThatThrownBy(
-                    () -> RIGHT_LEFT_NONE_ROW.nextMoveDirection(4))
-                .hasMessage("존재하지 않는 라인입니다");
-        }
+        @DisplayName("가장 오른쪽에 브릿지가 있는 Row 생성에 성공한다")
+        void test1() {
+            final var row = new Row(List.of(Direction.NONE, Direction.RIGHT, Direction.LEFT));
 
-        @ParameterizedTest
-        @ValueSource(ints = {1, 2})
-        void row_의_n_번_지점이_브릿지의_시작인지_여부를_알려준다(int numberOfLine) {
-            Assertions.assertThat(RIGHT_LEFT_NONE_ROW.isStartOfBridge(numberOfLine))
-                .isFalse();
+            assertThat(row.numberOfLines())
+                .isEqualTo(3);
         }
 
         @Test
-        void row_의_라인수를_알려준다() {
-            final int numberOfLines = RIGHT_LEFT_NONE_ROW.numberOfLines();
+        @DisplayName("가장 왼쪽에 브릿지가 있는 Row 생성에 성공한다")
+        void test2() {
+            final var row = new Row(List.of(Direction.RIGHT, Direction.LEFT, Direction.NONE));
 
-            Assertions.assertThat(numberOfLines).isEqualTo(3);
+            assertThat(row.numberOfLines())
+                .isEqualTo(3);
         }
     }
 
     private Row RIGHT_LEFT_NONE_인_ROW_생성() {
         return Row.builder().numberOfLines(3).decisionMaker(() -> Boolean.TRUE).build();
+    }
+
+    @Test
+    void n_번_라인의_방향을_알려준다() {
+        Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
+
+        Direction nextDirection = RIGHT_LEFT_NONE_ROW.nextMoveDirection(0);
+
+        Assertions.assertThat(nextDirection).isEqualTo(Direction.RIGHT);
+    }
+
+    @Test
+    void 존재하지_않는_라인의_방향을_물어보면_실패한다() {
+        Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
+
+        Assertions.assertThatThrownBy(
+                () -> RIGHT_LEFT_NONE_ROW.nextMoveDirection(4))
+            .hasMessage("존재하지 않는 라인입니다");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2})
+    void n_번_라인이_브릿지의_시작인지_여부를_알려준다(int numberOfLine) {
+        Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
+
+        Assertions.assertThat(RIGHT_LEFT_NONE_ROW.isStartOfBridge(numberOfLine))
+            .isFalse();
+    }
+
+    @Test
+    void 라인_개수를_알려준다() {
+        Row RIGHT_LEFT_NONE_ROW = RIGHT_LEFT_NONE_인_ROW_생성();
+
+        final int numberOfLines = RIGHT_LEFT_NONE_ROW.numberOfLines();
+
+        Assertions.assertThat(numberOfLines).isEqualTo(3);
     }
 }

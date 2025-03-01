@@ -1,11 +1,9 @@
 package laddergame.ladder;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 
-@Nested
 class DirectionArgumentsConverter implements ArgumentConverter {
 
     @Override
