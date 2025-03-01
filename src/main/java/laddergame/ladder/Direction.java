@@ -41,7 +41,7 @@ public interface Direction {
 
         @Override
         public boolean isValidPoint(final Direction previous, final boolean isLastPosition) {
-            return !isLastPosition && !previous.isLeftComponentOfBridge();
+            return !isLastPosition && !previous.isRightComponentOfBridge();
         }
 
         @Override

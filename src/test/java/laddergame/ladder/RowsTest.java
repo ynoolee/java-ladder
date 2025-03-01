@@ -13,7 +13,7 @@ public class RowsTest {
     }
 
     @Test
-    @DisplayName("서로 다른 개수의 라인으로 이루어진 Row 로 생성 시도시 에러가 발생한다")
+    @DisplayName("서로 다른 개수의 포인트를 가진 Row 들로 Rows 를 생성할 수 없다")
     void test() {
         Assertions.assertThatIllegalArgumentException()
             .isThrownBy(() -> new Rows(List.of(

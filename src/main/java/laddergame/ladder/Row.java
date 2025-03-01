@@ -69,12 +69,12 @@ public class Row {
     private void addBridges(List<Direction> points, BridgeDecisionMaker decisionMaker) {
         for (int i = 0; i < points.size() - 1; i++) {
             if (isPossibleToMakeBridge(points, i) && decisionMaker.decide()) {
-                createBridgeAt(points, i);
+                createBridgeFrom(points, i);
             }
         }
     }
 
-    private void createBridgeAt(List<Direction> points, int leftIndexOfBridge) {
+    private void createBridgeFrom(List<Direction> points, int leftIndexOfBridge) {
         var rightIndexOfBridge = leftIndexOfBridge + 1;
         points.set(leftIndexOfBridge, Direction.RIGHT);
         points.set(rightIndexOfBridge, Direction.LEFT);

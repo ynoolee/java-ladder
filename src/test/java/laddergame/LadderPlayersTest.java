@@ -4,14 +4,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 class LadderPlayersTest {
 
+    private LadderPlayers createPlayers(String... names) {
+        return new LadderPlayers(Arrays.stream(names)
+            .map(Player::new)
+            .collect(Collectors.toList()));
+    }
+
     @Test
-    @DisplayName("유효한 라인넘버로 플레이어을 찾을 수 있다")
+    @DisplayName("특정 라인에서 시작하는 플레이어가 누구인지 알려준다")
     void test() {
-        final LadderPlayers players = new LadderPlayers(List.of(new Player("joy"), new Player("kelly")));
+        final LadderPlayers players = createPlayers("joy", "kelly");
 
         final Player playerOfOneLine = players.playerOfLine(0);
 
@@ -20,11 +27,12 @@ class LadderPlayersTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 라인에 대한 보상을 요청할 경우 에러를 발생한다")
-    void test2() {
-        final LadderPlayers players = new LadderPlayers(List.of(new Player("joy"), new Player("kelly")));
+    @DisplayName("존재하지 않는 라인에서 시작하는 플레이어를 질의하면 실패한다")
+    void test4() {
+        final LadderPlayers players = createPlayers("joy", "kelly");
 
         Assertions.assertThatIllegalArgumentException()
-            .isThrownBy(() -> players.playerOfLine(4));
+            .isThrownBy(() -> players.playerOfLine(5))
+            ;
     }
 }

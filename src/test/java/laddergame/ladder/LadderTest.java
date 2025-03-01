@@ -10,8 +10,24 @@ import java.util.Random;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class LadderTest {
 
+    private Ladder createLadder(int numberOfLines, final Height height) {
+        return Ladder.builder()
+            .numberOfLines(numberOfLines)
+            .height(height)
+            .bridgeDecisionMaker(() -> new Random().nextBoolean())
+            .build();
+    }
+
+    private Ladder 라인개수3인_사다리를_생성(int height) {
+        return Ladder.builder()
+            .numberOfLines(3)
+            .height(new Height(height))
+            .bridgeDecisionMaker(() -> new Random().nextBoolean())
+            .build();
+    }
+
     @Test
-    void 사다리_라인은_2개_이상이어야_한다() {
+    void 사다리_라인은_2개_이상이다() {
         // 여기서 라인은 세로 라인
         final var numberOfLines = 1;
         final var validHeight = new Height(2);
@@ -31,21 +47,5 @@ public class LadderTest {
 
         // then
         Assertions.assertThat(height).isEqualTo(new Height(inputHeight));
-    }
-
-    private Ladder createLadder(int numberOfLines, final Height height) {
-        return Ladder.builder()
-            .numberOfLines(numberOfLines)
-            .height(height)
-            .bridgeDecisionMaker(() -> new Random().nextBoolean())
-            .build();
-    }
-
-    private Ladder 라인개수3인_사다리를_생성(int height) {
-        return Ladder.builder()
-            .numberOfLines(3)
-            .height(new Height(height))
-            .bridgeDecisionMaker(() -> new Random().nextBoolean())
-            .build();
     }
 }

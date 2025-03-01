@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 public class HeightTest {
 
     @Test
-    void 사다리의_높이는_1_이상이어야_한다() {
+    void 사다리의_높이는_1_이상이다() {
         final var invalidHeight = 0;
 
-        Assertions.assertThatThrownBy(() -> new Height(invalidHeight))
-            .hasMessage("사다리 높이는 1이상 이어야 합니다");
+        Assertions.assertThatIllegalArgumentException()
+            .isThrownBy(() -> new Height(invalidHeight));
     }
 }
