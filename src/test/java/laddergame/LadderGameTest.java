@@ -1,6 +1,5 @@
 package laddergame;
 
-import laddergame.ladder.Direction;
 import laddergame.ladder.Height;
 import laddergame.ladder.Ladder;
 import laddergame.ladder.Row;
@@ -10,6 +9,8 @@ import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static laddergame.ladder.point.PointsFixture.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class LadderGameTest {
@@ -34,7 +35,11 @@ public class LadderGameTest {
          * */
         return new LadderGame(
             new Ladder(List.of(
-                new Row(List.of(Direction.NONE, Direction.NONE, Direction.NONE))
+                new Row(List.of(
+                    어떤_것과도_연결되지_않은_포인트_생성(),
+                    어떤_것과도_연결되지_않은_포인트_생성(),
+                    어떤_것과도_연결되지_않은_포인트_생성())
+                )
             ), 3)
         );
     }
@@ -50,8 +55,8 @@ public class LadderGameTest {
          * */
         return new LadderGame(
             new Ladder(List.of(
-                new Row(List.of(Direction.RIGHT, Direction.LEFT)),
-                new Row(List.of(Direction.RIGHT, Direction.LEFT))
+                new Row(List.of(우측의_포인트와_연결된_포인트_생성(), 좌측의_포인트와_연결된_포인트_생성())),
+                new Row(List.of(우측의_포인트와_연결된_포인트_생성(), 좌측의_포인트와_연결된_포인트_생성()))
             ), 2)
         );
     }
@@ -63,8 +68,8 @@ public class LadderGameTest {
          * */
         return new LadderGame(
             new Ladder(List.of(
-                new Row(List.of(Direction.RIGHT, Direction.LEFT, Direction.NONE)),
-                new Row(List.of(Direction.NONE, Direction.RIGHT, Direction.LEFT))
+                new Row(List.of(우측의_포인트와_연결된_포인트_생성(), 좌측의_포인트와_연결된_포인트_생성(), 어떤_것과도_연결되지_않은_포인트_생성())),
+                new Row(List.of(어떤_것과도_연결되지_않은_포인트_생성(), 우측의_포인트와_연결된_포인트_생성(), 좌측의_포인트와_연결된_포인트_생성()))
             ), 3)
         );
     }
@@ -150,6 +155,5 @@ public class LadderGameTest {
             Assertions.assertThat(result.resultOf("play1"))
                 .isEqualTo(Reward.of("line3"));
         }
-
     }
 }
