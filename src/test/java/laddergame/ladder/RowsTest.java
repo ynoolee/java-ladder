@@ -1,5 +1,6 @@
 package laddergame.ladder;
 
+import laddergame.ladder.point.PointsFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import java.util.List;
 public class RowsTest {
 
     private Row createRowConsistOfNumberOfLine(int numberOfLine) {
-        return Row.builder().numberOfLines(numberOfLine).decisionMaker(() -> true).build();
+        return Row.builder().numberOfLines(numberOfLine).pointsFactory(new PointsFactory(() -> true)).build();
     }
 
     @Test

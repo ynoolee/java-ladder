@@ -1,5 +1,7 @@
 package laddergame.ladder;
 
+import laddergame.Position;
+import laddergame.ladder.point.PointsFactory;
 import lombok.Builder;
 
 import java.util.List;
@@ -40,30 +42,26 @@ public class Ladder {
     }
 
     private static List<Row> createRows(final int numberOfLines, final int height, final BridgeDecisionMaker bridgeDecisionMaker) {
-        return Stream.generate(() -> Row.builder().numberOfLines(numberOfLines).decisionMaker(bridgeDecisionMaker).build())
+        return Stream.generate(() -> Row.builder()
+                .numberOfLines(numberOfLines)
+                .pointsFactory(new PointsFactory(bridgeDecisionMaker))
+                .build())
             .limit(height)
             .collect(Collectors.toList());
     }
 
     public int destinationLineOf(int startLine) {
-        int resultLine = startLine;
+        Position currentPosition = new Position(0, startLine);
+        int currentLine = startLine;
 
         for (Row row : rows.rows()) {
-            resultLine = calculateNextLine(resultLine, row.nextMoveDirection(resultLine));
+            currentPosition = row.nextPositionOf(currentLine, currentPosition);
+            currentLine = currentPosition.getLineNumber();
         }
 
-        return resultLine;
-    }
-
-    private int calculateNextLine(int currentLine, Direction moveDirection) {
-        if (Direction.LEFT.equals(moveDirection)) {
-            return currentLine - 1;
-        }
-        if (Direction.RIGHT.equals(moveDirection)) {
-            return currentLine + 1;
-        }
         return currentLine;
     }
+
 
     public List<Row> allLadderRows() {
         return this.rows.rows();
